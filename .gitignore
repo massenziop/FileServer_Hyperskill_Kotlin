@@ -1,0 +1,26 @@
+# Gradle
+.gradle/
+build/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Kotlin
+*.class
+
+# OS
+.DS_Store
+Thumbs.db
+
+# JetBrains Educational Plugin
+course-remote-info.yaml
+**/task-remote-info.yaml
+course-info.yaml
+/File Server (Kotlin)/Networking
+/File Server (Kotlin)/Save a text file
+/File Server (Kotlin)/Save anything
+/File Server (Kotlin)/Storage emulator
