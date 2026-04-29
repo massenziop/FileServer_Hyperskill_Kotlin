@@ -1,57 +1,29 @@
 package server
 
-val storage = mutableSetOf<String>()
-val allowedFilenames = setOf("file1", "file2", "file3", "file4", "file5", "file6", "file7", "file8", "file9", "file10")
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import java.net.InetAddress
+import java.net.ServerSocket
 
-fun main(args: Array<String>) {
+const val SERVER_HOST = "127.0.0.1"
+const val SERVER_PORT = 8080
 
-    while (true) {
-        val input = readlnOrNull()
-        if (input == null) {
-            println("Wrong command")
-            continue
-        }
+private const val CONNECTIONS_BACKLOG = 50
 
-        if (input == "exit") {
-            return
-        }
-        val splitted = input.split(" ")
+fun main() {
+    println("Server started!")
 
-        val command = splitted[0]
-        val filename = splitted[1]
+    val server = ServerSocket(SERVER_PORT, CONNECTIONS_BACKLOG, InetAddress.getByName(SERVER_HOST))
+    val socket = server.accept()
+    socket.use {
+        val input = DataInputStream(socket.getInputStream())
+        val output = DataOutputStream(socket.getOutputStream())
 
-        when (command) {
-            "add" -> {
-                if (filename !in allowedFilenames) {
-                    println("Cannot add the file $filename")
-                    continue
-                }
+        val inputMessage = input.readUTF()
+        println("Received: $inputMessage")
 
-                if (storage.contains(filename)) {
-                    println("Cannot add the file $filename")
-                } else {
-                    storage.add(filename)
-                    println("The file $filename added successfully")
-                }
-                continue
-            }
-            "delete" -> {
-                if (storage.contains(filename)) {
-                    storage.remove(filename)
-                    println("The file $filename was deleted")
-                } else {
-                    println("The file $filename not found")
-                }
-                continue
-            }
-            "get" -> {
-                if (storage.contains(filename)) {
-                    println("The file $filename was sent")
-                } else {
-                    println("The file $filename not found")
-                }
-                continue
-            }
-        }
+        val outputMessage = "All files were sent!"
+        output.writeUTF(outputMessage)
+        println("Sent: $outputMessage")
     }
 }
